@@ -51,5 +51,15 @@ describe("POST /recommendations/:id/downvote", () => {
         const response = await supertest(app).post(`/recommendations/${id}/downvote`);
         expect(response.status).toEqual(200);
     });
+});
+
+describe("GET /recommendations/:id ", () => {
+    it("Returns 200 if there is recommendation by id", async () => {
+        const id = await getIdByName("Hapier");
+        const response = await supertest(app).get(`/recommendations/${id}`);
+        const status = response.status;
+        expect(status).toEqual(200);
+        expect(response.body).toEqual(expect.objectContaining({id, ...recommendationBody(), score: 0}));
+    });
     truncateTableRecommendations();
 });
