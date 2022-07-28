@@ -59,3 +59,11 @@ describe("GET /recommendations/:id ", () => {
         expect(response.body).toEqual(expect.objectContaining({id, ...recommendationBody(), score: 0}));
     });
 });
+
+describe("GET /recommendations ", () => {
+    it("should return status 200 and a list of recommendations", async () => {
+      const response = await supertest(app).get("/recommendations");
+      expect(response.body.length).toEqual(10);
+      expect(response.status).toEqual(200);
+    });
+  });
