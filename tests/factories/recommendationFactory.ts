@@ -12,8 +12,17 @@ export async function findIdByName(name: string) {
 
 export function recommendationBody() {
     const body: CreateRecommendationData = {
-        name: "Me ajuda",
+        name: "Hapier",
         youtubeLink: "https://www.youtube.com/watch?v=mM0tiwgtoCw",
     };
     return body;
+}
+
+export async function getIdByName(name: string) {
+    const result = await prisma.recommendation.findFirst({
+        where: {
+            name,
+        },
+    });
+    return result.id;
 }
