@@ -39,5 +39,17 @@ describe("route POST /recommendations/:id/upvote", () => {
         const result = await supertest(app).post(`/recommendations/${id}/upvote`);
         expect(result.status).toEqual(200);
     });
+});
+
+describe("POST /recommendations/:id/downvote", () => {
+    it("Returns 404 if there is no id", async () => {
+        const response = await supertest(app).post("/recommendations/100/downvote");
+        expect(response.status).toEqual(404);
+    });
+    it("Returns 200 on downvote", async () => {
+        const id = await getIdByName("Hapier");
+        const response = await supertest(app).post(`/recommendations/${id}/downvote`);
+        expect(response.status).toEqual(200);
+    });
     truncateTableRecommendations();
 });
