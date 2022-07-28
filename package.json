@@ -6,7 +6,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/server.ts",
-    "test": "dotenv -e .env.test prisma migrate dev seed && cross-env NODE_OPTIONS=--experimental-vm-modules dotenv -e .env.test jest -- -i"
+    "test": "dotenv -e .env.test prisma migrate dev && dotenv -e .env.test prisma db seed && cross-env NODE_OPTIONS=--experimental-vm-modules dotenv -e .env.test jest -- -i"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +33,7 @@
     "typescript": "^4.6.4"
   },
   "dependencies": {
+    "@faker-js/faker": "^7.3.0",
     "@prisma/client": "^3.13.0",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",

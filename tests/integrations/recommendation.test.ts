@@ -3,9 +3,6 @@ import app from "../../src/app.js";
 import { prisma } from "../../src/database.js";
 import { recommendationBody, findIdByName, getIdByName } from "../factories/recommendationFactory.js"
 
-async function truncateTableRecommendations() {
-    await prisma.$executeRaw`TRUNCATE TABLE recommendations;`;
-}
 afterAll(async () => {
     await prisma.$disconnect();
 });
@@ -61,5 +58,4 @@ describe("GET /recommendations/:id ", () => {
         expect(status).toEqual(200);
         expect(response.body).toEqual(expect.objectContaining({id, ...recommendationBody(), score: 0}));
     });
-    truncateTableRecommendations();
 });
