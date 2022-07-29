@@ -67,3 +67,12 @@ describe("GET /recommendations ", () => {
         expect(response.status).toEqual(200);
     });
 });
+
+describe("GET /recommendations/top/:amount", () => {
+    it("Returns 200 and a list of recommendations ordered by descending score ", async () => {
+      const amount = Math.floor(Math.random() * 10 + 1);
+      const result = await supertest(app).get(`/recommendations/top/${amount}`);
+      expect(result.body.length).toEqual(amount);
+      expect(result.body[0].score).toEqual(50);
+    });
+  });
