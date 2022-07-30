@@ -10,7 +10,7 @@ export async function findIdByName(name: string) {
     return result.id;
 }
 
-export function recommendationBody() {
+export function recommendationBody():CreateRecommendationData {
     const body: CreateRecommendationData = {
         name: "Hapier",
         youtubeLink: "https://www.youtube.com/watch?v=mM0tiwgtoCw",
@@ -25,4 +25,14 @@ export async function getIdByName(name: string) {
         },
     });
     return result.id;
+}
+
+export function recommendationBodyUnit() {
+    const body= {
+        id: 70,
+        name: "Hapier",
+        youtubeLink: "https://www.youtube.com/watch?v=mM0tiwgtoCw",
+        score: 0
+    };
+    return body;
 }
