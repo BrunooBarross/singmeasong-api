@@ -29,7 +29,7 @@ export async function getIdByName(name: string) {
 
 export function recommendationBodyUnit() {
     const body= {
-        id: 70,
+        id: 23,
         name: "Hapier",
         youtubeLink: "https://www.youtube.com/watch?v=mM0tiwgtoCw",
         score: 0

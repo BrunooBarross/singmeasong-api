@@ -14,7 +14,8 @@ describe("Unit tests in the recommendations service", () => {
             message: "Recommendations names must be unique",
             type: "conflict",
         });
-    });   
+    });
+
     it("should pass if nothing is wrong", async () => {
         const body = recommendationsFactory.recommendationBodyUnit();
 
@@ -25,5 +26,22 @@ describe("Unit tests in the recommendations service", () => {
             .mockImplementation(() => undefined);
 
         await recommendationService.insert(body);
-    });  
+    });
+
+    it("Can't find recommendation to upvote", async () => {
+        jest.spyOn(recommendationRepository, "find").mockResolvedValue(null);
+
+        expect(async () => {
+            await recommendationService.upvote(90);
+        }).rejects.toEqual({ message: "", type: "not_found" });
+    });
+
+    it("Can't find recommendation to upvote", async () => {
+        const body = recommendationsFactory.recommendationBodyUnit();
+
+        jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(body);
+        jest.spyOn(recommendationRepository, "updateScore").mockImplementation(() => undefined);
+
+        await recommendationService.upvote(body.id);
+    });
 });
