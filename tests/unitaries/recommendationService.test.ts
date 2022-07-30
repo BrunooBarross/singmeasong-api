@@ -36,12 +36,34 @@ describe("Unit tests in the recommendations service", () => {
         }).rejects.toEqual({ message: "", type: "not_found" });
     });
 
-    it("Can't find recommendation to upvote", async () => {
+    it("It should pass if nothing's wrong", async () => {
         const body = recommendationsFactory.recommendationBodyUnit();
 
         jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(body);
         jest.spyOn(recommendationRepository, "updateScore").mockImplementation(() => undefined);
 
         await recommendationService.upvote(body.id);
+    });
+
+    it("Can't find recommendation to downvote", async () => {
+        jest.spyOn(recommendationRepository, "find").mockResolvedValue(null);
+
+        expect(async () => {
+            await recommendationService.downvote(90);
+        }).rejects.toEqual({ message: "", type: "not_found" });
+    });
+
+    it("It should pass if nothing's wrong", async () => {
+        const body = recommendationsFactory.recommendationBodyUnit();
+        jest
+            .spyOn(recommendationRepository, "find")
+            .mockResolvedValueOnce(body);
+
+        jest
+            .spyOn(recommendationRepository, "updateScore")
+            .mockResolvedValueOnce(body);
+
+        await recommendationService.downvote(body.id);
+        expect(recommendationRepository.updateScore).toHaveBeenCalled();
     });
 });
