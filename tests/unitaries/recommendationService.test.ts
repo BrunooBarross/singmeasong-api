@@ -140,6 +140,26 @@ describe("unitTest getScoreFilter", () => {
     });
 });
 
+describe("getTop", () => {
+    it("should call recommendationRepository.findAll", async () => {
+        const recommendationBody = recommendationsFactory.recommendationBodyUnit();
+
+        const recommendations = [
+            { ...recommendationBody, score: 60 },
+            { ...recommendationBody, score: 30 }
+        ];
+
+        jest
+            .spyOn(recommendationRepository, "getAmountByScore")
+            .mockResolvedValueOnce(recommendations);
+
+        const result = await recommendationService.getTop(2);
+
+        expect(recommendationRepository.getAmountByScore).toHaveBeenCalled();
+        expect(result).toEqual(recommendations);
+    });
+});
+
 describe("getRadom", () => {
     it("should not found recommendation getRandom", async () => {
         jest.spyOn(recommendationService, "getScoreFilter").mockReturnValue("lte");
