@@ -3,7 +3,7 @@ import * as recommendationsFactory from "../factories/recommendationFactory.js";
 import { recommendationService } from "../../src/services/recommendationsService.js";
 import { recommendationRepository } from "../../src/repositories/recommendationRepository.js";
 
-describe("Unit tests in the recommendations service", () => {
+describe("Insert Recommedantion", () => {
     it("should return a conflict with the same names in the recommendations", async () => {
         const body = recommendationsFactory.recommendationBodyUnit();
         jest.spyOn(recommendationRepository, "findByName")
@@ -27,7 +27,9 @@ describe("Unit tests in the recommendations service", () => {
 
         await recommendationService.insert(body);
     });
+});
 
+describe("Upvote Recommedantion", () => {
     it("Can't find recommendation to upvote", async () => {
         jest.spyOn(recommendationRepository, "find").mockResolvedValue(null);
 
@@ -44,7 +46,9 @@ describe("Unit tests in the recommendations service", () => {
 
         await recommendationService.upvote(body.id);
     });
+});
 
+describe("Downvote Recommendation", () => {
     it("Can't find recommendation to downvote", async () => {
         jest.spyOn(recommendationRepository, "find").mockResolvedValue(null);
 
