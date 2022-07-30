@@ -93,24 +93,20 @@ describe("Downvote Recommendation", () => {
     });
 });
 
-describe("getRadom", () => {
+describe("unitTest getScoreFilter", () => {
 
-    it("should return recommendations", async () => {
-        const recommendationBody = recommendationsFactory.recommendationBodyUnit();
-        const recommendations = [
-            { ...recommendationBody, score: 90 },
-            { ...recommendationBody, score: 40 },
-            { ...recommendationBody },
-        ];
-        jest
-            .spyOn(recommendationRepository, "findAll")
-            .mockResolvedValue(recommendations);
+    it("should return gt if value is lower than 0.7", async () => {
+        const result = recommendationService.getScoreFilter(0.5);
+        expect(result).toBe("gt");
+      });
 
-        const result = await recommendationService.getByScore("gt");
-
-        expect(result).toEqual(recommendations);
+    it("should return lte if value is higher than 0.7", async () => {
+      const result = recommendationService.getScoreFilter(0.8);
+      expect(result).toBe("lte");
     });
+});
 
+describe("getRadom", () => {
     it("should not found recommendation getRandom", async () => {
         jest.spyOn(recommendationService, "getScoreFilter").mockReturnValue("lte");
         jest.spyOn(recommendationService, "getByScore").mockResolvedValue([]);
