@@ -74,7 +74,6 @@ describe("Downvote Recommendation", () => {
     it("calls the Repository.remove function if the score is less than -5", async () => {
         const body = recommendationsFactory.recommendationBodyUnit();
         body.score = -10;
-        console.log(body);
         jest
             .spyOn(recommendationRepository, "find")
             .mockResolvedValueOnce(body);
@@ -91,5 +90,34 @@ describe("Downvote Recommendation", () => {
 
         expect(recommendationRepository.updateScore).toHaveBeenCalled();
         expect(recommendationRepository.remove).toHaveBeenCalled();
+    });
+});
+
+describe("getRadom", () => {
+
+    it("should return recommendations", async () => {
+        const body = recommendationsFactory.recommendationBodyUnit();
+        const recommendations = [
+            { ...body, score: 100 },
+            { ...body, score: 50 },
+            { ...body },
+        ];
+        jest
+            .spyOn(recommendationRepository, "findAll")
+            .mockResolvedValue(recommendations);
+
+        const result = await recommendationService.getByScore("gt");
+
+        expect(result).toEqual(recommendations);
+    });
+
+    it("should not found recommendation getRandom", async () => {
+        jest.spyOn(recommendationService, "getScoreFilter").mockReturnValue("lte");
+        jest.spyOn(recommendationService, "getByScore").mockResolvedValue([]);
+        jest.spyOn(recommendationRepository, "findAll").mockResolvedValue([]);
+
+        expect(async () => {
+            await recommendationService.getRandom();
+        }).rejects.toEqual({ message: "", type: "not_found" });
     });
 });
