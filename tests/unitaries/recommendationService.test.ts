@@ -84,7 +84,7 @@ describe("Downvote Recommendation", () => {
 
         jest
             .spyOn(recommendationRepository, "remove")
-            .mockImplementationOnce(async () => {});
+            .mockImplementationOnce(async () => { });
 
         await recommendationService.downvote(recommendationBody.id);
 
@@ -132,15 +132,16 @@ describe("unitTest getScoreFilter", () => {
     it("should return gt if value is lower than 0.7", async () => {
         const result = recommendationService.getScoreFilter(0.5);
         expect(result).toBe("gt");
-      });
+    });
 
     it("should return lte if value is higher than 0.7", async () => {
-      const result = recommendationService.getScoreFilter(0.8);
-      expect(result).toBe("lte");
+        const result = recommendationService.getScoreFilter(0.8);
+        expect(result).toBe("lte");
     });
 });
 
 describe("getTop", () => {
+
     it("should call recommendationRepository.findAll", async () => {
         const recommendationBody = recommendationsFactory.recommendationBodyUnit();
 
@@ -161,6 +162,17 @@ describe("getTop", () => {
 });
 
 describe("getRadom", () => {
+
+    it("returns at least one recommendation", async () => {
+        const recommendationBody = recommendationsFactory.recommendationBodyUnit();
+        jest
+            .spyOn(recommendationRepository, "findAll")
+            .mockResolvedValueOnce([recommendationBody]);
+
+        const recommendation = await recommendationService.getRandom();
+        expect(recommendation).toEqual(recommendationBody);
+    });
+
     it("should not found recommendation getRandom", async () => {
         jest.spyOn(recommendationService, "getScoreFilter").mockReturnValue("lte");
         jest.spyOn(recommendationService, "getByScore").mockResolvedValue([]);
