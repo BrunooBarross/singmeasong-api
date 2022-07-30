@@ -70,4 +70,26 @@ describe("Downvote Recommendation", () => {
         await recommendationService.downvote(body.id);
         expect(recommendationRepository.updateScore).toHaveBeenCalled();
     });
+
+    it("calls the Repository.remove function if the score is less than -5", async () => {
+        const body = recommendationsFactory.recommendationBodyUnit();
+        body.score = -10;
+        console.log(body);
+        jest
+            .spyOn(recommendationRepository, "find")
+            .mockResolvedValueOnce(body);
+
+        jest
+            .spyOn(recommendationRepository, "updateScore")
+            .mockResolvedValueOnce(body);
+
+        jest
+            .spyOn(recommendationRepository, "remove")
+            .mockImplementationOnce(async () => {});
+
+        await recommendationService.downvote(body.id);
+
+        expect(recommendationRepository.updateScore).toHaveBeenCalled();
+        expect(recommendationRepository.remove).toHaveBeenCalled();
+    });
 });
