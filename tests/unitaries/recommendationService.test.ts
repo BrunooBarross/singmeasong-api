@@ -5,11 +5,11 @@ import { recommendationRepository } from "../../src/repositories/recommendationR
 
 describe("Insert Recommedantion", () => {
     it("should return a conflict with the same names in the recommendations", async () => {
-        const body = recommendationsFactory.recommendationBodyUnit();
+        const recommendationBody = recommendationsFactory.recommendationBodyUnit();
         jest.spyOn(recommendationRepository, "findByName")
-            .mockResolvedValueOnce(body);
+            .mockResolvedValueOnce(recommendationBody);
         expect(async () => {
-            await recommendationService.insert(body);
+            await recommendationService.insert(recommendationBody);
         }).rejects.toEqual({
             message: "Recommendations names must be unique",
             type: "conflict",
@@ -17,7 +17,7 @@ describe("Insert Recommedantion", () => {
     });
 
     it("should pass if nothing is wrong", async () => {
-        const body = recommendationsFactory.recommendationBodyUnit();
+        const recommendationBody = recommendationsFactory.recommendationBodyUnit();
 
         jest.spyOn(recommendationRepository, "findByName")
             .mockImplementation(() => undefined);
@@ -25,7 +25,7 @@ describe("Insert Recommedantion", () => {
         jest.spyOn(recommendationRepository, "create")
             .mockImplementation(() => undefined);
 
-        await recommendationService.insert(body);
+        await recommendationService.insert(recommendationBody);
     });
 });
 
@@ -39,12 +39,12 @@ describe("Upvote Recommedantion", () => {
     });
 
     it("It should pass if nothing's wrong", async () => {
-        const body = recommendationsFactory.recommendationBodyUnit();
+        const recommendationBody = recommendationsFactory.recommendationBodyUnit();
 
-        jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(body);
+        jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(recommendationBody);
         jest.spyOn(recommendationRepository, "updateScore").mockImplementation(() => undefined);
 
-        await recommendationService.upvote(body.id);
+        await recommendationService.upvote(recommendationBody.id);
     });
 });
 
@@ -58,35 +58,35 @@ describe("Downvote Recommendation", () => {
     });
 
     it("It should pass if nothing's wrong", async () => {
-        const body = recommendationsFactory.recommendationBodyUnit();
+        const recommendationBody = recommendationsFactory.recommendationBodyUnit();
         jest
             .spyOn(recommendationRepository, "find")
-            .mockResolvedValueOnce(body);
+            .mockResolvedValueOnce(recommendationBody);
 
         jest
             .spyOn(recommendationRepository, "updateScore")
-            .mockResolvedValueOnce(body);
+            .mockResolvedValueOnce(recommendationBody);
 
-        await recommendationService.downvote(body.id);
+        await recommendationService.downvote(recommendationBody.id);
         expect(recommendationRepository.updateScore).toHaveBeenCalled();
     });
 
     it("calls the Repository.remove function if the score is less than -5", async () => {
-        const body = recommendationsFactory.recommendationBodyUnit();
-        body.score = -10;
+        const recommendationBody = recommendationsFactory.recommendationBodyUnit();
+        recommendationBody.score = -10;
         jest
             .spyOn(recommendationRepository, "find")
-            .mockResolvedValueOnce(body);
+            .mockResolvedValueOnce(recommendationBody);
 
         jest
             .spyOn(recommendationRepository, "updateScore")
-            .mockResolvedValueOnce(body);
+            .mockResolvedValueOnce(recommendationBody);
 
         jest
             .spyOn(recommendationRepository, "remove")
             .mockImplementationOnce(async () => {});
 
-        await recommendationService.downvote(body.id);
+        await recommendationService.downvote(recommendationBody.id);
 
         expect(recommendationRepository.updateScore).toHaveBeenCalled();
         expect(recommendationRepository.remove).toHaveBeenCalled();
@@ -96,11 +96,11 @@ describe("Downvote Recommendation", () => {
 describe("getRadom", () => {
 
     it("should return recommendations", async () => {
-        const body = recommendationsFactory.recommendationBodyUnit();
+        const recommendationBody = recommendationsFactory.recommendationBodyUnit();
         const recommendations = [
-            { ...body, score: 100 },
-            { ...body, score: 50 },
-            { ...body },
+            { ...recommendationBody, score: 90 },
+            { ...recommendationBody, score: 40 },
+            { ...recommendationBody },
         ];
         jest
             .spyOn(recommendationRepository, "findAll")
