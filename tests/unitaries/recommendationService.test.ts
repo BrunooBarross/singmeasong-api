@@ -31,7 +31,7 @@ describe("Insert Recommedantion", () => {
 
 describe("Upvote Recommedantion", () => {
     it("Can't find recommendation to upvote", async () => {
-        jest.spyOn(recommendationRepository, "find").mockResolvedValue(null);
+        jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(null);
 
         expect(async () => {
             await recommendationService.upvote(90);
@@ -50,10 +50,10 @@ describe("Upvote Recommedantion", () => {
 
 describe("Downvote Recommendation", () => {
     it("Can't find recommendation to downvote", async () => {
-        jest.spyOn(recommendationRepository, "find").mockResolvedValue(null);
+        jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(undefined);
 
         expect(async () => {
-            await recommendationService.downvote(90);
+            await recommendationService.downvote(1);
         }).rejects.toEqual({ message: "", type: "not_found" });
     });
 
@@ -92,6 +92,40 @@ describe("Downvote Recommendation", () => {
         expect(recommendationRepository.remove).toHaveBeenCalled();
     });
 });
+
+describe("unitTest getByScore", () => {
+
+    it("should return recommendations", async () => {
+        const recommendationBody = recommendationsFactory.recommendationBodyUnit();
+        const recommendations = [
+            { ...recommendationBody, score: 60 },
+            { ...recommendationBody, score: 30 }
+        ];
+        jest
+            .spyOn(recommendationRepository, "findAll")
+            .mockResolvedValue(recommendations);
+
+        const result = await recommendationService.getByScore("gt");
+        expect(result).toEqual(recommendations);
+    });
+})
+
+describe("unitTest get All", () => {
+
+    it("should return recommendations", async () => {
+        const recommendationBody = recommendationsFactory.recommendationBodyUnit();
+        const recommendations = [
+            { ...recommendationBody, score: 60 },
+            { ...recommendationBody, score: 30 }
+        ];
+        jest
+            .spyOn(recommendationRepository, "findAll")
+            .mockResolvedValue(recommendations);
+
+        const result = await recommendationService.get();
+        expect(result).toEqual(recommendations);
+    });
+})
 
 describe("unitTest getScoreFilter", () => {
 
