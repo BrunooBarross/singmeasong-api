@@ -1,4 +1,5 @@
 import supertest from "supertest";
+import { resourceLimits } from "worker_threads";
 import app from "../../src/app.js";
 import { prisma } from "../../src/database.js";
 import { recommendationBody, findIdByName, getIdByName } from "../factories/recommendationFactory.js"
@@ -70,9 +71,18 @@ describe("GET /recommendations ", () => {
 
 describe("GET /recommendations/top/:amount", () => {
     it("Returns 200 and a list of recommendations ordered by descending score ", async () => {
-      const amount = Math.floor(Math.random() * 10 + 1);
-      const result = await supertest(app).get(`/recommendations/top/${amount}`);
-      expect(result.body.length).toEqual(amount);
-      expect(result.body[0].score).toEqual(50);
+        const amount = Math.floor(Math.random() * 10 + 1);
+        const result = await supertest(app).get(`/recommendations/top/${amount}`);
+        expect(result.body.length).toEqual(amount);
+        expect(result.body[0].score).toEqual(50);
+    });
+});
+
+describe("GET /recommendations/random ", () => {
+    it("should return status 200 and a random recommendation", async () => {
+        const result = [];
+        const response = await supertest(app).get("/recommendations/random"); 
+        result.push(response.body)
+        expect(result.length).toBe(1);
     });
   });

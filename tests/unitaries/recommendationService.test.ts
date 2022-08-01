@@ -42,7 +42,7 @@ describe("Upvote Recommedantion", () => {
         const recommendationBody = recommendationsFactory.recommendationBodyUnit();
 
         jest.spyOn(recommendationRepository, "find").mockResolvedValueOnce(recommendationBody);
-        jest.spyOn(recommendationRepository, "updateScore").mockImplementation(() => undefined);
+        jest.spyOn(recommendationRepository, "updateScore").mockImplementationOnce(() => undefined);
 
         await recommendationService.upvote(recommendationBody.id);
     });
